@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Feb 28, 2009 1:52:00 PM                                                        
+
+     webcrawler    
+     Initial webcrawler
+                   
+     pjaol                                                                
+     ====================================================================== -->
+<project name="webcrawler" default="default">
+    <description>
+            Initial webcrawler
+    </description>
+
+	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="build"/>
+	<property name="dist.dir" value="dist"/>
+	<property name="lib.dir" value="lib"/>
+	
+	<path id="lib.path">
+		<fileset dir="${lib.dir}">
+ 		  <include name="*.jar"/>
+ 		</fileset>
+	</path>
+ 
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="default" depends="clean, setup,compile,jar,createWar" description="--> data analyzer">
+        
+    </target>
+
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete dir="${dist.dir}"/>
+	</target>
+	<target name="setup">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+	<!-- ================================= 
+          target: compile              
+         ================================= -->
+    <target name="compile" description="--> compile analyzer">
+    	 <mkdir dir="${build.dir}" />
+        <javac srcdir="${src.dir}"
+         destdir="${build.dir}"
+         classpathref="lib.path"
+         debug="on"/>
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: jar                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="jar">
+            <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${build.dir}"/>
+    </target>
+	
+	
+	
+	<target name="createWar">
+		<war destfile="${dist.dir}/${ant.project.name}.war" 
+			webxml="web.xml">
+			<lib dir="${lib.dir}">
+				<exclude name="servlet*.jar"/>
+			</lib>
+			<lib dir="${dist.dir}">
+				<include name="*.jar"/>
+			</lib>
+			
+		</war>
+		
+	</target>
+
+</project>
